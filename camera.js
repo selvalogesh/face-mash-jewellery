@@ -29,23 +29,23 @@ import {PoseIllustration} from './illustrationGen/illustration';
 import {Skeleton, facePartName2Index} from './illustrationGen/skeleton';
 import {FileUtils} from './utils/fileUtils';
 
-import * as girlSVG from './resources/illustration/girl.svg';
-import * as boySVG from './resources/illustration/boy.svg';
 import * as abstractSVG from './resources/illustration/abstract.svg';
-import * as blathersSVG from './resources/illustration/blathers.svg';
-import * as tomNookSVG from './resources/illustration/tom-nook.svg';
+import * as goldSVG from './resources/illustration/goldNeck16.svg';
+import * as silverSVG from './resources/illustration/silverNeck16.svg';
+import * as silver2SVG from './resources/illustration/silver2Neck16.svg';
+import * as stoneSVG from './resources/illustration/stoneNeck16.svg';
 
 // Camera stream video element
 let video;
-let videoWidth = 300;
-let videoHeight = 300;
+let videoWidth = 800;
+let videoHeight = 600;
 
 // Canvas
 let faceDetection = null;
 let illustration = null;
 let canvasScope;
 let canvasWidth = 800;
-let canvasHeight = 800;
+let canvasHeight = 600;
 
 // ML models
 let facemesh;
@@ -58,11 +58,15 @@ let nmsRadius = 30.0;
 let mobile = false;
 const stats = new Stats();
 const avatarSvgs = {
-  'girl': girlSVG.default,
-  'boy': boySVG.default,
+  // 'girl': girlSVG.default,
+  // 'boy': boySVG.default,
+  // 'blathers': blathersSVG.default,
+  // 'tom-nook': tomNookSVG.default,
+  'gold': goldSVG.default,
+  'silver': silverSVG.default,
+  'silver2': silver2SVG.default,
+  'stone': stoneSVG.default,
   'abstract': abstractSVG.default,
-  'blathers': blathersSVG.default,
-  'tom-nook': tomNookSVG.default,
 };
 
 /**
@@ -112,7 +116,7 @@ const defaultInputResolution = 200;
 const guiState = {
   avatarSVG: Object.keys(avatarSvgs)[0],
   debug: {
-    showDetectionDebug: true,
+    showDetectionDebug: false,
     showIllustrationDebug: false,
   },
 };
@@ -126,7 +130,8 @@ function setupGui(cameras) {
     guiState.camera = cameras[0].deviceId;
   }
 
-  const gui = new dat.GUI({width: 300});
+  const gui = new dat.GUI({width: 0.3*canvasWidth, autoPlace: true});
+  gui.domElement.id = 'gui';
 
   let multi = gui.addFolder('Image');
   gui.add(guiState, 'avatarSVG', Object.keys(avatarSvgs)).onChange(() => parseSVG(avatarSvgs[guiState.avatarSVG]));
@@ -241,9 +246,10 @@ function setupCanvas() {
   mobile = isMobile();
   if (mobile) {
     canvasWidth = Math.min(window.innerWidth, window.innerHeight);
+    canvasWidth *= 0.8;
     canvasHeight = canvasWidth;
-    videoWidth *= 0.7;
-    videoHeight *= 0.7;
+    videoWidth = canvasWidth;
+    videoHeight = canvasHeight;
   }  
 
   canvasScope = paper.default;
@@ -251,6 +257,8 @@ function setupCanvas() {
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
   canvasScope.setup(canvas);
+  console.log("Is mobile: "+mobile)
+  console.log("Dim: "+canvasWidth+", "+canvasHeight)
 }
 
 /**
