@@ -26,6 +26,7 @@ See the second commit for the exact diff against the original project.
 | `camera.html`, `camera.js` | The try-on page and its logic |
 | `resources/illustration/*Neck*.svg` | Necklace illustrations |
 | `docs/` | Production build served by GitHub Pages |
+| `assets/unused/` | Draft necklace SVGs and downloaded reference images, kept for the record |
 | `README-pose-animator.md` | Original Pose Animator README |
 
 ## Status
