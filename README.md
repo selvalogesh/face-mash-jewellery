@@ -1,75 +1,39 @@
-# Pose Animator
+# Face Mash Jewellery
 
-Pose Animator takes a 2D vector illustration and animates its containing curves in real-time based on the recognition result from PoseNet and FaceMesh. It borrows the idea of skeleton-based animation from computer graphics and applies it to vector characters.
+A virtual necklace try-on that runs in the browser. Your webcam feed drives a jewellery
+illustration in real time, so the necklace follows your neck and shoulders as you move.
 
-This is running in the browser in realtime using [TensorFlow.js](https://www.tensorflow.org/js). Check out more cool TF.js demos [here](https://www.tensorflow.org/js/demos).
+**Live demo:** https://selvalogesh.github.io/face-mash-jewellery/ (allow camera access; pick a
+necklace from the menu at the top right)
 
-*This is not an officially supported Google product.*
+Built in July 2021 on top of Google's [Pose Animator](https://github.com/yemount/pose-animator),
+which animates SVG illustrations from PoseNet and FaceMesh keypoints with TensorFlow.js.
 
-<img src="/resources/gifs/avatar-new-1.gif?raw=true" alt="cameraDemo" style="width: 250px;"/>
+## What I changed
 
-<img src="/resources/gifs/avatar-new-full-body.gif?raw=true" alt="cameraDemo" style="width: 250px;"/>
+- Four necklace illustrations (`gold`, `silver`, `silver2`, `stone`) in `resources/illustration/`,
+  rigged to the Pose Animator skeleton, replacing the character avatars
+- Full 800×600 camera canvas instead of the half-size preview, with the controls moved to the top right
+- Mobile layout: the canvas scales to 80% of the screen and the video matches it
+- Detection debug overlay off by default
 
-In skeletal animation a character is represented in two parts:
-1. a surface used to draw the character, and 
-1. a hierarchical set of interconnected bones used to animate the surface. 
+See the second commit for the exact diff against the original project.
 
-In Pose Animator, the surface is defined by the 2D vector paths in the input SVG files. For the bone structure, Pose Animator provides a predefined rig (bone hierarchy) representation, designed based on the keypoints from PoseNet and FaceMesh. This bone structure’s initial pose is specified in the input SVG file, along with the character illustration, while the real time bone positions are updated by the recognition result from ML models.
+## Layout
 
-<img src="https://firebasestorage.googleapis.com/v0/b/pose-animator-demo.appspot.com/o/ml-keypoints.png?alt=media" style="width:250px;"/>
+| Path | What |
+|---|---|
+| `camera.html`, `camera.js` | The try-on page and its logic |
+| `resources/illustration/*Neck*.svg` | Necklace illustrations |
+| `docs/` | Production build served by GitHub Pages |
+| `README-pose-animator.md` | Original Pose Animator README |
 
-<img src="/resources/gifs/avatar-new-bezier-1.gif?raw=true" alt="cameraDemo" style="width: 250px;"/>
+## Status
 
-// TODO: Add blog post link.
-For more details on its technical design please check out this blog post.
+Archived. The `docs/` build is the 2021 production build. Rebuilding from source needs the old
+Parcel 1 toolchain (`yarn && yarn build-camera` on Node 14), and Parcel 1 currently fails on the
+npm `paper` 0.12 package, so treat the source as a reference.
 
-### Demo 1: [Camera feed](https://pose-animator-demo.firebaseapp.com/camera.html)
+## License
 
-The camera demo animates a 2D avatar in real-time from a webcam video stream.
-
-
-### Demo 2: [Static image](https://pose-animator-demo.firebaseapp.com/static_image.html)
-
-The static image demo shows the avatar positioned from a single image.
-
-## Build And Run
-
-Install dependencies and prepare the build directory:
-
-```sh
-yarn
-```
-
-To watch files for changes, and launch a dev server:
-
-```sh
-yarn watch
-```
-
-## Platform support
-
-Demos are supported on Desktop Chrome and iOS Safari.
-
-It should also run on Chrome on Android and potentially more Android mobile browsers though support has not been tested yet.
-
-# Animate your own design
-
-1. Download the [sample skeleton SVG here](/resources/samples/skeleton.svg).
-1. Create a new file in your vector graphics editor of choice. Copy the group named ‘skeleton’ from the above file into your working file. Note: 
-	* Do not add, remove or rename the joints (circles) in this group. Pose Animator relies on these named paths to read the skeleton’s initial position. Missing joints will cause errors.
-	* However you can move the joints around to embed them into your illustration. See step 4.
-1. Create a new group and name it ‘illustration’, next to the ‘skeleton’ group. This is the group where you can put all the paths for your illustration.
-    * Flatten all subgroups so that ‘illustration’ only contains path elements.
-    * Composite paths are not supported at the moment.
-    * The working file structure should look like this:
-	```
-        [Layer 1]
-        |---- skeleton
-        |---- illustration
-              |---- path 1
-              |---- path 2
-              |---- path 3
-	```
-1. Embed the sample skeleton in ‘skeleton’ group into your illustration by moving the joints around.
-1. Export the file as an SVG file.
-1. Open [Pose Animator camera demo](https://pose-animator-demo.firebaseapp.com/camera.html). Once everything loads, drop your SVG file into the browser tab. You should be able to see it come to life :D
+Apache License 2.0, same as Pose Animator. See [LICENSE](LICENSE).
